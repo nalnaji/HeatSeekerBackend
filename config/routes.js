@@ -46,7 +46,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'post /images/:imgname': 'PhotoController.imageUpload',
+  'post /photo/upload': 'PhotoController.upload',
   'get /user/:id/friends': 'UserController.getFriends'
 
 };

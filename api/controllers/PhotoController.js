@@ -6,21 +6,31 @@
  */
 
 module.exports = {
-	imageUpload: function (req, res) {
-		var imgName = req.param('imgname');
+	upload: function  (req, res) {
+		if(req.method === 'GET')
+			return res.json({'status':'GET not allowed'});
 
-		req.file('img').upload({
-			"dirname": ImageService.SAVED_IMAGES_DIR,
-			"saveAs": imgName
-		}, function (err, uploadedImages) {
-			if (err) {
-				return res.negotiate(err);
-			}
+		// fetch the user based on access_token
+		var uploader = User.find({where: { accessToken: req.param('access_token') },limit: 1 })
+			.exec(function (err, user) {
+				if (err) {
+					console.log(err);
+					res.json(err);
+				}
+				console.log(user);
+				var photoThermal = req.file('image');
 
-			res.json({
-				'filename': imgName
+		    photoThermal.upload(function onUploadComplete (err, file) {
+		    	if (err) return res.serverError(err);
+					console.log(file);
+		    	Photo.create({
+						type: req.param('type'),
+						filename: file[0].fd.substr(file[0].fd.lastIndexOf('/') + 1),
+						owner: user[0]
+					}).exec(function (err, photo) {
+						res.json(photo);
+					});
+		    });
 			});
-		});
 	}
 };
-
