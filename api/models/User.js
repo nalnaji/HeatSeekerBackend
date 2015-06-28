@@ -20,13 +20,16 @@ module.exports = {
 		score: {
 			type: 'integer',
 			defaultsTo: 0
+		},
+		name: {
+			type: 'string'
 		}
 	},
 
 	beforeCreate: function(newlyInsertedRecord, cb) {
-		FacebookService.getMyId(newlyInsertedRecord.accessToken, function (id){
-			console.log('myID:', id);
-			newlyInsertedRecord.fbId = id;
+		FacebookService.getMyId(newlyInsertedRecord.accessToken, function (data){
+			newlyInsertedRecord.fbId = data.id;
+			newlyInsertedRecord.name = data.name;
 			cb();
 		});
 	},

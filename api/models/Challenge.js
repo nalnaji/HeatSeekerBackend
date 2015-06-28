@@ -8,17 +8,29 @@
 module.exports = {
 
   attributes: {
-    owner: {
-
+    from: {
+      model:'User'
+    },
+    to: {
+      model:'User'
     },
     photoThermal: {
-
+      model:'Photo'
     },
     photoVisual: {
-
+      model:'Photo'
     },
     status: {
-
+      type: 'string',
+      defaultsTo: 'Unknown'
+    },
+    temperature: {
+      type: 'integer',
+      required: true
+    },
+    result: {
+      type: 'integer',
+      defaultsTo: 0
     }
   }
 };
