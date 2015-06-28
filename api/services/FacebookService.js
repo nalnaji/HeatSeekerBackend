@@ -1,49 +1,37 @@
 var FB = require('facebook-node');
 
-var FB_CONFIGS = require('/Users/sourabhdesai/Documents/Node Projects/HeatSeakerBackend/assets/json/fb_configs.json');
+var FB_CONFIGS = require('/Users/andrew.lai/Code/HeatSeekerBackend/assets/json/fb_configs.json');
 
 FB.setAccessToken(FB_CONFIGS.access_token);
 
-exports.getUserFriends = function (userId, accessToken, cb) {
-	console.log();
-
+exports.getMyId = function (accessToken, cb) {
 	FB.setAccessToken(accessToken);
 
-	FB.api('fql', { q: 'SELECT uid2 from friend where uid1=me()' }, function (res) {
-		if (!res || res.error) {
-			var err = res.error || new Error("Didn't receive FQL response for friends query for accessToken " + accessToken);
-			console.log(cb);
-			return cb(err);
-		}
+	FB.api(
+    "/me",
+    function (response) {
+      if (response && !response.error) {
+        /* handle the result */
+				console.log(response);
+				cb(response.id);
+      }
+    }
+	);
+};
 
-		cb(null, res.data);
-	});
-	/*User
-	.where({id: userId, limit: 1})
-	.exec(function (err, user) {
-		if (err) {
-			return cb(err);
-		}
+exports.getUserFriends = function (accessToken, cb) {
+	FB.setAccessToken(accessToken);
 
-		if (_.isArray(user)) {
-			user = user[0];
-		}
-
-		/* Try resorting to this if FQL query doesnt work...
-		var userFBID = user.fbId;
-
-		var friendsEndpoint = '/v2.1/{userId}/friends/'.replace('{userId}', userFBID);
-		FB.api(friendsEndpoint, 'get', function (err, res) {
-			if (err) {
-				return cb(err);
-			}
-
-			cb(null, res.data);
-		});
-		/
-	});*/
-
-
+	FB.api(
+    "/me/friends",
+    function (response) {
+      if (response && !response.error) {
+        /* handle the result */
+				console.log(response);
+				cb(null, response.data);
+      }
+    }
+	);
 };
 
 // To be used when new access token is given by FB api service

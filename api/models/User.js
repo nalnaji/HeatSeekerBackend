@@ -6,20 +6,29 @@
 */
 
 module.exports = {
-	"attributes": {
-		"fbId": {
-			"type": "string",
-			'required': true
+	schema: 'true',
+	attributes: {
+		fbId: {
+			type: 'string',
+			unique: true
 		},
-		'score': {
-			'type': 'integer',
-			'required': false
+		accessToken: {
+			type: 'string',
+			required: true,
+			unique: true
+		},
+		score: {
+			type: 'integer',
+			defaultsTo: 0
 		}
 	},
 
-	'beforeCreate': function (values, cb) {
-		values.score = 0;
-		cb();
-	}
-};
+	beforeCreate: function(newlyInsertedRecord, cb) {
+		FacebookService.getMyId(newlyInsertedRecord.accessToken, function (id){
+			console.log('myID:', id);
+			newlyInsertedRecord.fbId = id;
+			cb();
+		});
+	},
 
+};

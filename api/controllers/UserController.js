@@ -8,30 +8,28 @@
 module.exports = {
 
 	getFriends: function (req, res) {
-		var userId = Number(req.param('id'));
+		// var userId = Number(req.param('id'));
 		var accessToken = req.query.access_token;
 
 		if (_.isUndefined(accessToken)) {
 			return res.badRequest('Didnt receive access token as query param. must be "access_token=..."');
 		}
 
-		FacebookService.getUserFriends(userId, accessToken, function (err, friends) {
+		FacebookService.getUserFriends(accessToken, function (err, friends) {
 			if (err) {
 				return res.negotiate(err);
 			}
 
-			var friendsFBIDs = _.pluck(friends, 'uid2');
-			console.log(friendsFBIDs);
+			res.json(friends);
 
-			async.map(friendsFBIDs, UserService.getUserFromFBId, function (err, userFriends) {
-				if (err) {
-					return res.negotiate(err);
-				}
-
-				res.json(userFriends);
-			});
+			// async.map(friendsFBIDs, UserService.getUserFromFBId, function (err, userFriends) {
+			// 	if (err) {
+			// 		return res.negotiate(err);
+			// 	}
+			//
+			// 	res.json(userFriends);
+			// });
 		});
 	}
-	
-};
 
+};
