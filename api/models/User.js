@@ -12,7 +12,7 @@ module.exports = {
 			type: 'string',
 			unique: true
 		},
-		accessToken: {
+		access_token: {
 			type: 'string',
 			required: true,
 			unique: true
@@ -27,7 +27,7 @@ module.exports = {
 	},
 
 	beforeCreate: function(newlyInsertedRecord, cb) {
-		FacebookService.getMyId(newlyInsertedRecord.accessToken, function (data){
+		FacebookService.getMyId(newlyInsertedRecord.access_token, function (data){
 			newlyInsertedRecord.fbId = data.id;
 			newlyInsertedRecord.name = data.name;
 			cb();
