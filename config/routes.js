@@ -48,6 +48,8 @@ module.exports.routes = {
 
   'post /photo/upload': 'PhotoController.upload',
   'post /challenge/new': 'ChallengeController.createChallenge',
+  'post /challenge/sent': 'ChallengeController.sent',
+  'post /challenge/received': 'ChallengeController.received',
   'get /user/:id/friends': 'UserController.getFriends'
 
 };

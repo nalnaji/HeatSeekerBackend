@@ -40,5 +40,31 @@ module.exports = {
 
 			res.ok();
 		});
+	},
+	sent: function (req, res) {
+		console.log('access_token: ', req.param('access_token'));
+
+		UserService.getUserFromToken(req.param('access_token'), function (err, me) {
+			if (err) {
+				console.log(err);
+				res.json(err);
+			}
+			Challenge.find({where: {from: me.id}}).populate('to').exec(function (err, ch) {
+				res.json(ch);
+			});
+		});
+	},
+	received: function (req, res) {
+		console.log('access_token: ', req.param('access_token'));
+
+		UserService.getUserFromToken(req.param('access_token'), function (err, me) {
+			if (err) {
+				console.log(err);
+				res.json(err);
+			}
+			Challenge.find({where: {to: me.id}}).populate('from').exec(function (err, ch) {
+				res.json(ch);
+			});
+		});
 	}
 };
