@@ -6,6 +6,39 @@
  */
 
 module.exports = {
-	
-};
+	createChallenge: function (req, res) {
+		if(req.method === 'GET')
+			return res.json({'status':'GET not allowed'});
 
+		UserService.getUserFromToken(req.param('access_token'), function (err, me) {
+			if (err) {
+				console.log(err);
+				res.json(err);
+			}
+			console.log(me);
+			var friends = req.param('to').split(',');
+			var photoThermal = req.param('photoThermal');
+			var photoVisual = req.param('photoVisual');
+			var temp = parseInt(req.param('temp'));
+			var created = 0;
+
+			_.each(friends, function (friend) {
+				UserService.getUserFromFBId(friend, function (err, you) {
+					console.log('you:', you);
+					Challenge.create({
+						from: me,
+						to: you,
+						photoThermal: photoThermal,
+						photoVisual: photoVisual,
+						status: 'Created',
+						temperature: temp,
+						result: 0
+					}).exec(console.log);
+					created++;
+				});
+			});
+
+			res.ok();
+		});
+	}
+};

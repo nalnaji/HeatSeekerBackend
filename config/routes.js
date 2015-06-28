@@ -47,6 +47,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   'post /photo/upload': 'PhotoController.upload',
+  'post /challenge/new': 'ChallengeController.createChallenge',
   'get /user/:id/friends': 'UserController.getFriends'
 
 };
